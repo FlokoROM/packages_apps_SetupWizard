@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- The caption about privacy policy -->
+                <!-- The caption about privacy policy
                 <TextView
                     android:id="@+id/privacy_policy"
                     android:layout_width="match_parent"
@@ -49,9 +49,9 @@
                     android:paddingRight="@dimen/content_margin_right"
                     style="@style/PageSummaryText"
                     android:text="@string/services_explanation"
-                    android:clickable="true"/>
+                    android:clickable="true"/>-->
 
-                <!-- Whether or not to enable metrics -->
+                <!-- Whether or not to enable metrics
                 <LinearLayout
                     android:id="@+id/metrics"
                     android:orientation="horizontal"
@@ -85,7 +85,7 @@
                         android:paddingBottom="@dimen/content_margin_bottom"
                         android:text="@string/services_metrics_label"/>
 
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <!-- Checkbox for using on-screen nav keys -->
                 <LinearLayout
