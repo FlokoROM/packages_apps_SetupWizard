@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 The CyanogenMod Project
- * Copyright (C) 2017 The LineageOS Project
+ * Copyright (C) 2017-2020 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
 
 package org.lineageos.setupwizard;
 
+import static android.view.View.INVISIBLE;
 import static com.google.android.setupcompat.util.ResultCodes.RESULT_ACTIVITY_NOT_FOUND;
 import static com.google.android.setupcompat.util.ResultCodes.RESULT_RETRY;
 import static com.google.android.setupcompat.util.ResultCodes.RESULT_SKIP;
 
 import static org.lineageos.setupwizard.SetupWizardApp.ACTION_EMERGENCY_DIAL;
 import static org.lineageos.setupwizard.SetupWizardApp.ACTION_NEXT;
+import static org.lineageos.setupwizard.SetupWizardApp.ACTION_SETUP_COMPLETE;
 import static org.lineageos.setupwizard.SetupWizardApp.EXTRA_ACTION_ID;
 import static org.lineageos.setupwizard.SetupWizardApp.EXTRA_FIRST_RUN;
 import static org.lineageos.setupwizard.SetupWizardApp.EXTRA_HAS_MULTIPLE_USERS;
@@ -36,7 +38,10 @@ import android.annotation.Nullable;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiManager;
@@ -75,7 +80,7 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
     protected static final int EMERGENCY_DIAL_ACTIVITY_REQUEST = 10038;
     protected static final int WIFI_ACTIVITY_REQUEST = 10004;
     protected static final int BLUETOOTH_ACTIVITY_REQUEST = 10100;
-    protected static final int FINGERPRINT_ACTIVITY_REQUEST = 10101;
+    protected static final int BIOMETRIC_ACTIVITY_REQUEST = 10101;
     protected static final int SCREENLOCK_ACTIVITY_REQUEST = 10102;
 
     private static final int IMMERSIVE_FLAGS =
@@ -89,8 +94,20 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
     private boolean mIsFirstRun = true;
     protected boolean mIsGoingBack = false;
     private boolean mIsPrimaryUser;
-    private int mResultCode = 0;
+    protected int mResultCode = 0;
     private Intent mResultData;
+    private final BroadcastReceiver finishReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ACTION_SETUP_COMPLETE.equals(intent.getAction())) {
+                if (BaseSetupWizardActivity.this instanceof FinishActivity) return;
+                if (mNavigationBar != null) {
+                    // hide the activity's view, so it does not pop up again
+                    mNavigationBar.getRootView().setVisibility(INVISIBLE);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +115,7 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
             logActivityState("onCreate savedInstanceState=" + savedInstanceState);
         }
         super.onCreate(savedInstanceState);
+        registerReceiver(finishReceiver, new IntentFilter(ACTION_SETUP_COMPLETE));
         mIsPrimaryUser = UserHandle.myUserId() == 0;
         initLayout();
         mNavigationBar = getNavigationBar();
@@ -169,6 +187,7 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
         if (LOGV) {
             logActivityState("onDestroy");
         }
+        unregisterReceiver(finishReceiver);
         super.onDestroy();
     }
 
@@ -307,7 +326,7 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
             Animation fadeOut = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
             final Button next = mNavigationBar.getNextButton();
             next.startAnimation(fadeOut);
-            next.setVisibility(View.INVISIBLE);
+            next.setVisibility(INVISIBLE);
         }
     }
 
@@ -515,12 +534,12 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
             Animation fadeOut = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
             final Button back = mNavigationBar.getBackButton();
             back.startAnimation(fadeOut);
-            back.setVisibility(View.INVISIBLE);
+            back.setVisibility(INVISIBLE);
         }
     }
 
     protected int getTransition() {
-        return TRANSITION_ID_DEFAULT;
+        return TRANSITION_ID_SLIDE;
     }
 
     protected boolean tryEnablingWifi() {
@@ -591,8 +610,8 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
             case BLUETOOTH_ACTIVITY_REQUEST:
                 sb.append("BLUETOOTH_ACTIVITY_REQUEST");
                 break;
-            case FINGERPRINT_ACTIVITY_REQUEST:
-                sb.append("FINGERPRINT_ACTIVITY_REQUEST");
+            case BIOMETRIC_ACTIVITY_REQUEST:
+                sb.append("BIOMETRIC_ACTIVITY_REQUEST");
                 break;
             case SCREENLOCK_ACTIVITY_REQUEST:
                 sb.append("SCREENLOCK_ACTIVITY_REQUEST");
@@ -633,7 +652,7 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
                     default:
                         break;
                 }
-            case FINGERPRINT_ACTIVITY_REQUEST:
+            case BIOMETRIC_ACTIVITY_REQUEST:
                 switch (resultCode) {
                     case RESULT_OK:
                         sb.append("RESULT_OK");
@@ -642,7 +661,7 @@ public abstract class BaseSetupWizardActivity extends Activity implements Naviga
                         sb.append("RESULT_CANCELED");
                         break;
                     case RESULT_SKIP:
-                        sb.append("RESULT_FINGERPRINT_SKIP");
+                        sb.append("RESULT_BIOMETRIC_SKIP");
                         break;
                     default:
                         break;
