@@ -51,9 +51,9 @@
     <string name="yes">Si</string>
     <string name="data_sim_name">SIM <xliff:g id="sub">%1$d</xliff:g> - <xliff:g id="name">%2$s</xliff:g></string>
     <string name="emergency_call">Chamada de emerxencia</string>
-    <string name="setup_services">Actualizacións de crDroid</string>
+    <string name="setup_services">Actualizacións de FlokoROM</string>
     <string name="services_privacy_policy">Política de privacidade</string>
-    <string name="services_help_improve_cm">Axuda a mellorar <xliff:g id="name" example="crDroid">%s</xliff:g></string>
+    <string name="services_help_improve_cm">Axuda a mellorar <xliff:g id="name" example="FlokoROM">%s</xliff:g></string>
     <string name="services_os_nav_keys_label"><b>Usar as teclas de navegación</b> en vez das do hardware.</string>
     <string name="setup_unlock">Desbloquear</string>
     <string name="setup_device_locked">Este dispositivo foi bloqueado polo usuario.</string>
@@ -77,11 +77,11 @@
     <string name="lockscreen_setup_summary"><b>Protexe o dispositivo</b> e solicitar un PIN, patrón ou contrasinal para desbloquear a pantalla</string>
     <string name="lockscreen_setup_screen_lock_setup">Configura</string>
     <string name="intro_restore_title">Restaurar aplicacións e datos</string>
-    <string name="intro_restore_subtitle" product="tablet">Se tes unha copia de seguranza da túa última tableta con crDroid, podes restaurala aquí.</string>
-    <string name="intro_restore_subtitle" product="default">Se tes unha copia de seguranza do teu último teléfono con crDroid, podes restaurala aquí.</string>
+    <string name="intro_restore_subtitle" product="tablet">Se tes unha copia de seguranza da túa última tableta con FlokoROM, podes restaurala aquí.</string>
+    <string name="intro_restore_subtitle" product="default">Se tes unha copia de seguranza do teu último teléfono con FlokoROM, podes restaurala aquí.</string>
     <string name="intro_restore_button">Restaurar dende a copia de seguranza</string>
     <string name="update_recovery_title">Actualizar Recuperador de Lineage</string>
-    <string name="update_recovery_description">Actualiza o Recuperador do crDroid no primeiro arranque despois de cada actualización.</string>
+    <string name="update_recovery_description">Actualiza o Recuperador do FlokoROM no primeiro arranque despois de cada actualización.</string>
     <string name="update_recovery_warning">O Recuperador actualizarase axiña que remates a configuración. Se desexas mantelo intacto, desactiva esta función.</string>
-    <string name="update_recovery_setting">Actualizar o Recuperador de crDroid xunto co sistema operativo</string>
+    <string name="update_recovery_setting">Actualizar o Recuperador de FlokoROM xunto co sistema operativo</string>
 </resources>
